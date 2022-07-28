@@ -1,6 +1,15 @@
+### Analysis for "Small rainfall changes drive substantial changes in plant coexistence"
+### Mary Van Dyke, mnvandyke@ucla.edu
+### Last edit: 25 July 2022
+
+### this script tests for differences in gravimetric water content between treatments 
+### at three time points during the growing season
+
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(ggpubr)
+options(scipen = 5)
 
 soil <- read.csv("./data/soil_gwc.csv")
 
