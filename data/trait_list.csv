@@ -1,0 +1,12 @@
+﻿Organ,Trait,Units,Description
+leaf,Leaf area,cm2,One-sided area of an individual leaf.
+leaf,Specific leaf area (SLA),g/cm2,Area of fresh leaf divided by oven-dry mass.
+leaf,Leaf nitrogen concentration,mg/g,Total amount of N per unit of dry leaf mass.
+leaf,Leaf dry matter content (LDMC),mg/g,"Oven-dry mass (mg) of leaf,  divided by its water saturated fresh mass (g)."
+seed,Seed mass,g,Oven-dry mass of an average seed of a species.
+root,Rooting depth,cm,Maximum soil depth from which resources can be acquired.
+root,Specific root length (SRL),m/g,The ratio of root length to dry mass of fine roots - a ratio of acquisition to investment.
+whole_plant,Maximum height,cm,Maximum stature a typical mature individual of a species attains in a given habitat.
+whole_plant,Canopy shape index,dimensionless,A measure of investment in vertical vs. lateral growth.
+whole_plant,Phenology (peak fruiting),day of year,Day of peak fruiting for a species.
+whole_plant,Carbon isotope composition,d13C,A measure of intrinsic water use efficiency.
