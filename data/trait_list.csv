@@ -9,4 +9,4 @@ root,Specific root length (SRL),m/g,The ratio of root length to dry mass of fine
 whole_plant,Maximum height,cm,Maximum stature a typical mature individual of a species attains in a given habitat.
 whole_plant,Canopy shape index,dimensionless,A measure of investment in vertical vs. lateral growth.
 whole_plant,Phenology (peak fruiting),day of year,Day of peak fruiting for a species.
-whole_plant,Carbon isotope composition,d13C,A measure of intrinsic water use efficiency.
+whole_plant,Carbon isotope composition,d13C,A measure of intrinsic water use efficiency (WUE).

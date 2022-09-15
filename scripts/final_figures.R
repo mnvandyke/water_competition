@@ -67,75 +67,89 @@ df <- data.frame(niche_diff = niche_differentiation,
 head(df)
 
 #Text size 
-geom.text.size = 6
-label.size = 3
-element.size = (14/5)*label.size
-theme.size = (14/5) * geom.text.size
+geom.text.size = 7*(5/14)
+geom.text.size2 = 6*(5/14)
+label.size = 5*(5/14)
+element.size = 5
+theme.size = 7
 
 #Coexistence plot: Figure 1
 ggplot(boots_pairs_w_sup) + 
-  theme_classic(base_size = 20)+
-  coord_cartesian(xlim = c(-.05, 1), ylim = c(0.25, 10)) +
+  theme_classic()+
+  theme(text = element_text( size = theme.size),
+        axis.title = element_text(size = theme.size), 
+        axis.text.x = element_text(size = (theme.size - 1)),
+        axis.text.y = element_text(size = (theme.size - 1)),
+        legend.title = element_text(size = theme.size-1),
+        legend.text = element_text(size = theme.size-1),
+        legend.position = c(.2, .01),
+        legend.justification = c("bottom"),
+        legend.box.just = "bottom",
+        #legend.margin = margin(.5, .5, .5, .5),
+        legend.direction = "horizontal",
+        legend.key.height = unit(0.1, "cm"),
+        legend.spacing.x = unit(-0.2, "cm"),
+        plot.margin=margin(t = 3, r = 0, b = 2, l = 2)) +
+  coord_cartesian(xlim = c(-.01, 1), ylim = c(0.25, 10)) +
   geom_line(data = df, aes(x = niche_diff, y = max_fitness_ratio)) +
   geom_line(data = df,  aes(x = niche_diff, y = min_fitness_ratio)) +
   geom_ribbon(data = df, aes(x = niche_diff, ymin = min_fitness_ratio, ymax = max_fitness_ratio), fill = 'grey80') +
-  annotate( "text", x = 0.8, y = 1, label = "Coexistence: \n \u03c1 < (Kj/Ki) < 1/\u03c1", size = geom.text.size, fontface = 2) +
-  annotate("text", x = 0.13, y = 6.5, label = "Competitive Exclusion", size = geom.text.size, fontface = 2) +
-  annotate("text", x = 0.13, y = .55, label = "Competitive Exclusion", size = geom.text.size, fontface = 2) +
-  geom_point(aes(x = snd, y = fd, color = treat, shape = treat, group = sp_pair), size = 4, stroke = 1) +
+  annotate( "text", x = 0.8, y = 0.9, label = "Coexistence: \n \u03c1 < (Kj/Ki) < 1/\u03c1", size = geom.text.size2, fontface = "bold") +
+  annotate("text", x = 0.13, y = 6.5, label = "Competitive Exclusion", size = geom.text.size2, fontface = "bold") +
+  annotate("text", x = 0.13, y = .55, label = "Competitive Exclusion", size = geom.text.size2, fontface = "bold") +
+  geom_point(aes(x = snd, y = fd, color = treat, shape = treat, group = sp_pair), size = 0.75, stroke = 1) +
   scale_color_manual(values=c('1' ="#4E84C4", '2' = "#D16103"), name = "Treatment:", labels = c("Ambient", "Reduced Rain")) +
-  scale_shape_manual(values = c('1'= 15, '2'= 19), name = "Treatment:", labels = c("Ambient", "Reduced Rain")) +
-  geom_text_repel(data = boots_pairs_w_sup %>%
-                    filter(treat == 2), 
-                  aes(x = snd, y = fd, label = label, size = label.size), 
-                  nudge_x = c(0.03, .025, 0, 0.025, .025, 0,.025, -0.025, -.025, -0.025, -.025,-0.025,0.025,0.025,0.025 ), 
-                  nudge_y = c(0.01, 0, 0.01, 0, 0,0.05, 0, 0, 0, 0, 0.01, 0,0,0,0 )) +
-  geom_path(aes(x = snd, y = fd, group = sp_pair), arrow = arrow(length=unit(0.20,"cm"), ends="last", type = "closed")) +
+  scale_shape_manual(values = c('1'= 15, '2'= 16), name = "Treatment:", labels = c("Ambient", "Reduced Rain")) +
+  geom_text_repel(data = boots_pairs_w_sup %>% filter(treat == 2), 
+                  aes(x = snd, y = fd, label = label), 
+                  size = label.size,
+                  box.padding = 0.05,
+                  nudge_x = c(0.025, 0.025, 0.01, 0.025, .025, 0,.025, -0.025, -.025, -0.025, -.025,-0.025,0.025,0.025,0.025 ), 
+                  nudge_y = c(0.005, 0, 0.002, 0, 0,0.05, 0, -0.02, 0, 0, 0.01, 0,0,-.005,0 )) +
+  geom_path(aes(x = snd, y = fd, group = sp_pair), arrow = arrow(length=unit(0.03,"inches"), ends="last", type = "closed"), size = 0.25) +
   scale_y_log10(expand = c(0,0)) + #setting cut-off and making y on a log scale
   scale_x_continuous(expand= c(.1,0)) +
-  labs( x = "Stabilizing niche difference (1-\u03c1)", y = "Fitness difference (Kj/Ki)", size = 18) +
-  theme(axis.title = element_text(size = theme.size), 
-        axis.text.x = element_text(size = (theme.size - 2)),
-        axis.text.y = element_text(size = (theme.size - 2)),
-          legend.title = element_text(size = theme.size),
-          legend.text = element_text(size = theme.size),
-          legend.position = c(.2, .025),
-          legend.justification = c("bottom"),
-          legend.box.just = "bottom",
-          legend.margin = margin(1, 1, 1, 1),
-          legend.direction = "horizontal") +
-  guides(fill = guide_legend(title = "Treatment", title.position = "left", cex = 1), col = guide_legend(nrow = 2) , size = F)+
+  labs( x = "Stabilizing niche difference (1-\u03c1)", y = "Fitness difference (Kj/Ki)", size = theme.size) +
+  guides(fill = guide_legend(title = "Treatment", title.position = "left", cex = 1,byrow = TRUE), col = guide_legend(nrow = 2) , size = F)+
   NULL
-ggsave("./figures/boots_w_sup.pdf", width = 10, height = 6, device = cairo_pdf)
+ggsave("./figures/boots_w_sup.pdf", width = 89, height = 55, units = "mm", device = cairo_pdf)
 
 #lambda plot: Figure 2
 seed_data$treat <- factor(seed_data$treat, levels = c("W", "D"))
 
 seed_data %>%
   filter(num_comp == 0) %>%
-  ggplot(aes(x = focal, y = num_seeds, fill = factor(treat))) +
+  ggplot(aes(x = focal, y = num_seeds, fill = factor(treat, levels = c("W", "D")))) +
   scale_x_discrete(labels = c( "ACWR" = "AC", "FEMI" = "FE", "HOMU" = "HO", "PLER" = "PL", "SACO" = "SA", "URLI"= "UR")) +
-  theme_classic(base_size = 20) +
-  theme(text = element_text(size = 18), 
-         legend.position = c(.85, .95),
-         legend.justification = c("top"),
-         legend.box.just = "top",
-         legend.margin = margin(1, 1, 1, 1)) +
-  guides(fill = guide_legend(title = "Treatment:", title.position = "left"), col = guide_legend(nrow = 1), size = F )+
-  geom_boxplot()+
-  scale_fill_manual(values=c("W" ="#4E84C4", "D" = "#D16103"), name = "treatment", labels = c("Ambient", "Reduced Rain")) +
-  geom_text(aes(x = 1, y = 10000, label = "ns"), size = geom.text.size) +
-  geom_text(aes(x = 2, y = 5000, label = "*"), size = geom.text.size) +
-  geom_text(aes(x = 3, y = 3000, label = "ns"), size = geom.text.size) +
-  geom_text(aes(x = 4, y = 3000, label = "ns"), size = geom.text.size) +
-  geom_text(aes(x = 5, y = 4000, label = "ns"), size = geom.text.size) +
-  geom_text(aes(x = 6, y = 1400, label = "*"), size = geom.text.size) +
+  theme_classic() +
+  theme(text = element_text(size = theme.size),
+        axis.text.y = element_text(size = (theme.size - 1)),
+        legend.position = c(.82, 1),
+        legend.justification = c("top"),
+        legend.box.just = "top",
+        legend.margin = margin(1, 1, 1, 1),
+        legend.title = element_text(size = theme.size-1),
+        legend.text = element_text(size = theme.size-1), 
+        legend.key.size = unit(.3, "cm"),
+        plot.margin=margin(t = 3, r = 3, b = 0, l = 3)) +
+  guides(fill = guide_legend(title = "Treatment:", title.position = "left"), 
+         col = guide_legend(nrow = 1), 
+         size = "none" )+
+  geom_boxplot(width=0.5, lwd=0.25,position=position_dodge(.6), outlier.size=0.25)+
+  #geom_point(aes(shape = treat, group = treat), position=position_jitterdodge(dodge.width=0.9), size=2)+
+  scale_fill_manual(values=c("W" ="#4E84C4", "D" = "#D16103"), name = "treat", labels = c("Ambient", "Reduced Rain")) +
+  geom_text(aes(x = 1, y = 10000, label = "ns"), size =label.size) +
+  geom_text(aes(x = 2, y = 5000, label = "*"), size = 8*(5/14)) +
+  geom_text(aes(x = 3, y = 3000, label = "ns"), size = label.size) +
+  geom_text(aes(x = 4, y = 3000, label = "ns"), size = label.size) +
+  geom_text(aes(x = 5, y = 4000, label = "ns"), size = label.size) +
+  geom_text(aes(x = 6, y = 1400, label = "*"), size =8*(5/14)) +
   xlab(" ")+
   ylab("Fecundity")+
-  labs( color = "treatment") +
+  labs( color = "treat") +
   scale_y_log10() +
   NULL
-ggsave("./figures/real_lambda_log.pdf", width = 10, height = 6)
+ggsave("./figures/real_lambda_log.pdf", width = 89, height = 55, units = "mm")
 
 
 #TRAITS plot: Figure 4
@@ -152,69 +166,76 @@ ggsave("./figures/real_lambda_log.pdf", width = 10, height = 6)
   vegan :: mantel(dist_snd_diffs, dist_pc1)
   
  fd_plot <- ggplot(df_compile)+
-    geom_point(aes(x = pc1, y = fd_w ), color = "#4E84C4", shape = 15) +
-    geom_point(aes(x = pc1, y = fd_d), color = "#D16103", shape = 19) +
+    geom_point(aes(x = pc1, y = fd_w ), color = "#4E84C4", shape = 15, size = 0.75) +
+    geom_point(aes(x = pc1, y = fd_d), color = "#D16103", shape = 19, size = 0.75) +
     theme_classic() +
-   annotate("text", x = 0.5, y = 8.6, label = "Reduced Rain", size = 4, color = "#D16103",  hjust = 0) +
-   annotate("text", x = 0.5, y = 8, label =paste("R^2 == ", "0.839"), size = 4, color = "#D16103", parse = T, hjust = 0) +
-    annotate("text", x = 0.5, y = 7.4, label = "p = 0.003*", size = 4, color = "#D16103", hjust = 0) +
-   annotate("text", x = 4, y = 2, label = "Ambient", size = 4, color = "#4E84C4",  hjust = 0) +
-   annotate("text", x = 4, y = 1.3, label = paste("R^2 == ","0.423") , size = 4, color = "#4E84C4", parse = T, hjust = 0) +
-    annotate("text", x = 4, y = 0.75, label = "p = ns", size = 4, color = "#4E84C4", hjust = 0) +
+   theme(text = element_text(size = theme.size))+
+   annotate("text", x = 0.5, y = 8.6, label = "Reduced Rain", size = geom.text.size, color = "#D16103", hjust = 0) +
+   annotate("text", x = 0.5, y = 8, label = bquote(italic(R)^2 ~.("= 0.839")), size = geom.text.size, color = "#D16103", hjust = 0) +
+    annotate("text", x = 0.5, y = 7.4, label = "p = 0.003*", size = geom.text.size, color = "#D16103",  hjust = 0) +
+   annotate("text", x = 4, y = 2.3, label = "Ambient", size = geom.text.size, color = "#4E84C4",  hjust = 0) +
+   annotate("text", x = 4, y = 1.5, label = bquote(italic(R)^2 ~.("= 0.423")), size = geom.text.size, color = "#4E84C4", hjust = 0) +
+    annotate("text", x = 4, y = 0.8, label = "p = ns", size = geom.text.size, color = "#4E84C4", hjust = 0) +
     stat_smooth(aes(x = pc1, y = fd_w), color = "#4E84C4", method = "lm", se=F) +
     stat_smooth(aes(x = pc1, y = fd_d), color = "#D16103", method = "lm", se = F, linetype = "dashed") +
     ylab("Fitness differneces") +
     xlab("functional trait distances \n between pairs on pc1 axis")
   
   snd_plot <- ggplot(df_compile)+
-    geom_point(aes(x = pc1, y = snd_w ), color = "#4E84C4", shape = 15) +
-    geom_point(aes(x = pc1, y = snd_d), color = "#D16103", shape = 19) +
+    geom_point(aes(x = pc1, y = snd_w ), color = "#4E84C4", shape = 15, size = 0.75) +
+    geom_point(aes(x = pc1, y = snd_d), color = "#D16103", shape = 19, size = 0.75) +
     theme_classic() +
-    annotate("text", x = 0.5, y = 1.1, label = "Reduced Rain", size = 4, color = "#D16103", hjust = 0) +
-    annotate("text", x = 0.5, y = 1, label =paste("R^2 == ", "0.266"), size = 4, color = "#D16103", parse = T, hjust = 0) +
-    annotate("text", x = 0.5, y = 0.9, label = "p = ns", size = 4, color = "#D16103", hjust = 0) +
-    annotate("text", x = 4, y = 0.22, label = "Ambient", size = 4, color = "#4E84C4", hjust = 0) +
-    annotate("text", x = 4, y = 0.12, label = paste("R^2 ==",".031"), size = 4, color = "#4E84C4", hjust = 0, parse = T) +  
-    annotate("text", x = 4, y = 0.02, label = "p = ns", size = 4, color = "#4E84C4", hjust = 0) +
+    theme(text = element_text(size = theme.size))+
+    annotate("text", x = 0.5, y = 1.1, label = "Reduced Rain", size = geom.text.size, color = "#D16103", hjust = 0) +
+    annotate("text", x = 0.5, y = 1, label = bquote(italic(R)^2 ~.("= 0.266")), size = geom.text.size, color = "#D16103", hjust = 0) +
+    annotate("text", x = 0.5, y = 0.9, label = "p = ns", size = geom.text.size, color = "#D16103",  hjust = 0) +
+    annotate("text", x = 4, y = 0.2, label = "Ambient", size = geom.text.size, color = "#4E84C4",  hjust = 0) +
+    annotate("text", x = 4, y = 0.1, label = bquote(italic(R)^2 ~.("= 0.031")),  size = geom.text.size, color = "#4E84C4", hjust = 0) +  
+    annotate("text", x = 4, y = 0.02, label = "p = ns", size = geom.text.size, color = "#4E84C4",  hjust = 0) +
     stat_smooth(aes(x = pc1, y = snd_w), color = "#4E84C4", method = "lm", se = F) +
     stat_smooth(aes(x = pc1, y = snd_d), color = "#D16103", method = "lm", se = F, linetype = "dashed") +
     ylab("Stabilizing niche differneces") +
-    xlab("functional trait distances \n between pairs on pc1 axis")
+    xlab("functional trait distances \n between pairs on pc1 axis") 
   
   snd_diff_plot <- ggplot(df_compile, aes(x = pc1, y = snd_diffs))+
-    geom_point()+
+    geom_point( size = 0.75)+
     theme_classic() +
-    geom_text_repel(aes(label = label), size = 3,
-                    nudge_y = c(0.01, 0.01, 0.01, 0.01, -.01, .01 , .01, 0.01, .01, -.01, .01, .01, .01, .01, .01), 
-                    nudge_x = c(.1, .1, .1, .1, .1, .1 , .1, 0.1, .1, .1, .1, .1, 0.1, 0.1, .1)) +
-    annotate("text", x = 0.5, y = .68, label = paste("R^2 ==", "0.167"), hjust = 0, parse = T) +
-    annotate("text", x = 0.5, y = .61, label = "p = ns", size = 4, hjust = 0) +
+    theme(text = element_text(size = theme.size))+
+    geom_text_repel(aes(label = label), size = geom.text.size2,
+                    box.padding = 0.1,
+                    nudge_y = c(0.01, 0.01, 0, 0.01, -.01, .01 , .01, 0.01, -.01, -.01, .01, .01, -.005, -.001, .01), 
+                    nudge_x = c(.1, .1, .05, -.1, .1, .1 , .1, 0.05, -.01, .1, .1, .1, 0.1, 0.1, .1)) +
+    annotate("text", x = 0.5, y = .68, label = bquote(italic(R)^2 ~.("= 0.167")), size =geom.text.size, hjust = 0) +
+    annotate("text", x = 0.5, y = .62, label = "p = ns", size = geom.text.size, hjust = 0) +
     stat_smooth(method = "lm", color = "black", se = F) +
     ylab("Change in stabilizing niche \n differneces between treatments") +
-    xlab("functional trait distances \n between pairs on pc1 axis")
+    xlab("functional trait distances \n between pairs on pc1 axis") 
   
   fd_diff_plot_abs <- ggplot(df_compile, aes(x = pc1, y = fd_diff_abs))+
-    geom_point()+
+    geom_point(size = 0.75)+
     theme_classic() +
-    geom_text_repel(aes(label = label), size = 3,
+    theme(text = element_text(size = theme.size))+
+    geom_text_repel(aes(label = label), size = geom.text.size2,
+                    box.padding = 0.1,
                     nudge_y = c(.1, -.1, -.01, .1, .1, -.1 , .1, 0, .1, -.1, .1, .1, .1, .05, .1), 
-                    nudge_x = c(.1, .1, .1, .1, .1, .1 , .1, 0, .1, .1, .1, 0, 0.1, 0, .1))+
-    annotate("text", x = 0.5, y = 5, label = paste("R^2 ==","0.537"), size = 4, parse = T, hjust = 0)+
-    annotate("text",x = 0.5, y = 4.6, label = "p = 0.028*", size = 4, hjust = 0) +
+                    nudge_x = c(.1, .1, .1, .1, .1, .1 , .1, 0, -.1, .1, .1, -.05, 0.1, 0.1, .1))+
+    annotate("text", x = 0.5, y = 5.1, label = bquote(italic(R)^2 ~.("= 0.537")), size = geom.text.size, hjust = 0)+
+    annotate("text",x = 0.5, y = 4.55, label = "p = 0.028*", size = geom.text.size, hjust = 0) +
     stat_smooth(method = "lm", color = "black", se= F) +
     ylab("Change in fitness differneces \n between treatments (absolute value)") +
-    xlab("functional trait distances \n between pairs on pc1 axis")
+    xlab("functional trait distances \n between pairs on pc1 axis") 
   
-diff_plots <- ggarrange(fd_diff_plot_abs, snd_diff_plot, labels = c("A", "B"))
-fd_snd_plot <- ggarrange(fd_plot, snd_plot, labels = c("C", "D"))
+diff_plots <- ggarrange(fd_diff_plot_abs, snd_diff_plot, labels = c("a", "b"), font.label = list(size = 8, color = "black", face = "bold"))
+fd_snd_plot <- ggarrange(fd_plot, snd_plot, labels = c("c", "d"), font.label = list(size = 8, color = "black", face = "bold"))
 ggarrange( diff_plots, fd_snd_plot, nrow = 2)
   
-ggsave("./figures/trait_diff.pdf", width = 10, height = 6,device = cairo_pdf)
+ggsave("./figures/trait_diff.pdf", width = 183, height = 110, units = "mm", device = cairo_pdf)
 
 #Supplemental Coexistence plot: Figure ED1
 
 ggplot(boots_pairs_w_sup) + 
-  theme_classic(base_size = 20)+
+  theme_classic()+
+  theme(text = element_text(size = theme.size))+
   coord_cartesian(xlim = c(-.05, 1), ylim = c(0.1, 15)) +
   geom_line(data = df, aes(x = niche_diff, y = max_fitness_ratio)) +
   geom_line(data = df,  aes(x = niche_diff, y = min_fitness_ratio)) +
@@ -225,7 +246,8 @@ ggplot(boots_pairs_w_sup) +
   scale_color_manual(values=c('1'="#4E84C4", '2' = "#D16103"), name = "Treatment:", labels = c("Ambient", "Reduced Rain")) +
   scale_shape_manual(values = c('1' = 15, '2' = 16), name = "Treatment:", labels = c("Ambient", "Reduced Rain")) +
   scale_y_log10(expand = c(0,0)) + #setting cut-off and making y on a log scale
-  labs( x = "Stabilizing niche difference (1-\u03c1)", y = "Fitness difference (Kj/Ki)", size = 18) +
+  scale_x_continuous(breaks = c(0, 0.5, 1)) +
+  labs( x = "Stabilizing niche difference (1-\u03c1)", y = "Fitness difference (Kj/Ki)") +
   theme(axis.title = element_text(size = theme.size), 
         axis.text.x = element_text(size = (theme.size - 2)),
         axis.text.y = element_text(size = (theme.size - 2)),
@@ -236,11 +258,13 @@ ggplot(boots_pairs_w_sup) +
         legend.box.just = "bottom",
         legend.margin = margin(1, 1, 1, 1),
         legend.direction = "vertical", 
-        strip.background = element_blank()) +
-  guides(fill = guide_legend(title = "Treatment", title.position = "left", cex = 1), col = guide_legend(nrow = 2) , size = F)+
+        strip.background = element_blank(),
+        strip.text.x = element_text(size = 8),
+        panel.spacing = unit(0,'lines')) +
+  guides(fill = guide_legend(title = "Treatment", title.position = "left", cex = 1), col = guide_legend(nrow = 2) , scale = "none")+
  facet_wrap(vars(label), nrow = 4, scales ="free")+
   NULL
-ggsave("./figures/coexistence_facet.jpg", width = 12, height = 10, device = cairo_pdf)
+ggsave("./figures/coexistence_facet.jpg", width = 183, height = 183,units ="mm", device = "jpeg")
 
 
 #eta_alpha plot: Figure 3
@@ -248,15 +272,16 @@ ggsave("./figures/coexistence_facet.jpg", width = 12, height = 10, device = cair
 n_alpha_ratios <- read.csv("./output/n_alph_ratio_output.csv")
 
 ggplot(n_alpha_ratios, aes(x = type_change, y =change_value))+
-  theme_classic(base_size = 20) +
-  theme(text = element_text(size = 16))+
+  theme_classic() +
+  theme(text = element_text(size = theme.size))+
   geom_boxplot(fill = "light grey") +
   ylab("Difference between treatments") +
+  ylim(c(0,1)) +
   xlab (" ") +
   scale_x_discrete(labels=c("a_change"="Competition \n coefficients", "n_change" = "Demographic \n potential")) +
-  geom_text(aes(x = 1.5, y = 1, label = "*"), size = geom.text.size) +
+  geom_text(aes(x = 1.5, y = 0.9, label = "*"), size = 8) +
   NULL
-ggsave("./figures/alpha_eta_ratio_box.pdf", width= 4, height = 4, device = cairo_pdf)
+ggsave("./figures/alpha_eta_ratio_box.pdf", width= 89, height = 70, units = "mm", device = cairo_pdf)
 
 
 ### TABLES------
@@ -350,13 +375,14 @@ lambda <- seed_data %>%
 
 lambda_tab_df<- lambda %>%
   dplyr::group_by(focal, treat) %>%
-  dplyr::summarize(mean  = mean(num_seeds, na.rm = TRUE), se = sd(num_seeds, na.rm = TRUE)/sqrt(length(num_seeds)))
+  dplyr::mutate(count=n()) %>%
+  dplyr::summarize(mean  = mean(num_seeds, na.rm = TRUE), se = sd(num_seeds, na.rm = TRUE)/sqrt(length(num_seeds)), count = mean(count))
 
 lambda_tab_wide <- pivot_wider(data = lambda_tab_df, 
                                names_from = treat, 
-                               values_from = c(mean, se))
+                               values_from = c(mean, se, count))
 # Add p-values from glmer fecundity ~ species*treatment + plot -- found in lambda_plants.R
-lambda_tab_wide$p_value <- c(0.3597, 0.0006, 0.6869, 0.0670, 0.4452,"<0.0001" )
+lambda_tab_wide$p_value <- c(0.3597, "0.0006*", 0.6869, 0.0670, 0.4452,"<0.0001*" )
 #Edit other columns
 lambda_tab_wide$species_code<- c("AC", "FE", "HO", "PL", "SA", "UR")
 lambda_tab_wide$sci_name <- c("Acmispon wrangelianus", "Festuca microstachys", "Hordeum murinum", "Plantago erecta", "Salvia columbariae", "Uropappus lindleyi")
@@ -377,28 +403,30 @@ lambda_tab <- lambda_tab_wide %>%
     locations = cells_body(columns = "sci_name") )%>%
   tab_spanner(
     label = "Ambient Rainfall", 
-    columns = c(mean_W, se_W)) %>%
+    columns = c(mean_W, se_W, count_W)) %>%
   tab_spanner(
     label = "Reduced Rain", 
-    columns = c(mean_D, se_D)) %>%
+    columns = c(mean_D, se_D, count_D)) %>%
   tab_style(
     style = cell_text(weight = "bold"),
     locations = list(cells_column_spanners(), cells_stubhead())) %>%
    cols_move_to_start(
     columns = c(sci_name, species_code)) %>%
   cols_move(
-    columns = c(mean_W, se_W), 
+    columns = c(mean_W, se_W, count_W), 
     after = species_code) %>%
   cols_label(
     sci_name = "Species",
     species_code = "Code",
     mean_W = "Mean Fecundity", 
     se_W = "Standard error", 
+    count_W = "n",
     mean_D = "Mean Fecundity", 
     se_D = "Standard error", 
+    count_D = "n",
     p_value = "p-value") %>%
   cols_align(align = "center") %>%
-  cols_width(family~px(120), sci_name~px(100), species_code~px(70), everything()~px(90)) %>%
+  cols_width(family~px(120), sci_name~px(100), species_code~px(70), count_D~px(50), count_W~px(50), everything()~px(90)) %>%
   fmt_number(c(mean_W, se_W, mean_D, se_D), decimals = 1)
   
 lambda_tab
